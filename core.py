@@ -34,12 +34,13 @@ def get_coordinates():
         i += 1
         possible_y[i] = list(range(1, sizexy))
     i = 0
-    while i < coordsnumb:
-        i += 1
-        x = randint(1, sizexy)
-        y = choice(possible_y[x])
-        possible_y[x].remove(y)
-        coordinates.append(Coord(x, y))
+    #while i < coordsnumb:
+    #    i += 1
+    #    x = randint(1, sizexy)
+    #    y = choice(possible_y[x])
+    #    possible_y[x].remove(y)
+    #    coordinates.append(Coord(x, y))
+    coordinates = [Coord(2, 2), Coord(7, 1), Coord(7, 6), Coord(8, 3)]
     return coordinates
 
 
@@ -68,7 +69,7 @@ class BlackBox(object):
             self.pos = Coord(entry, sizexy + 1)
         elif sizexy + 1 <= entry <= sizexy * 2:
             self.direction = MOVE_LEFT
-            self.pos = Coord(sizexy + 1, sizexy * 2 - 1 - entry)
+            self.pos = Coord(sizexy + 1, sizexy * 2 + 1 - entry)
         elif sizexy * 2 + 1 <= entry <= sizexy * 3:
             self.direction = MOVE_DOWN
             self.pos = Coord(sizexy * 3 + 1 - entry, 0)
