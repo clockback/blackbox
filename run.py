@@ -1,3 +1,9 @@
+#! /usr/bin/python3.4
+
+"""
+Core functionality. Separated from usage by web, cli etc interfaces.
+"""
+
 from collections import namedtuple
 from random import choice, randint
 from time import sleep
