@@ -34,13 +34,12 @@ def get_coordinates():
         i += 1
         possible_y[i] = list(range(1, sizexy))
     i = 0
-    #while i < coordsnumb:
-    #    i += 1
-    #    x = randint(1, sizexy)
-    #    y = choice(possible_y[x])
-    #    possible_y[x].remove(y)
-    #    coordinates.append(Coord(x, y))
-    coordinates = [Coord(2, 2), Coord(7, 1), Coord(7, 6), Coord(8, 3)]
+    while i < coordsnumb:
+        i += 1
+        x = randint(1, sizexy)
+        y = choice(possible_y[x])
+        possible_y[x].remove(y)
+        coordinates.append(Coord(x, y))
     return coordinates
 
 
