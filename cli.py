@@ -8,8 +8,7 @@ from time import sleep
 
 import core
 
-if __name__ == '__main__':
-    side_len = 8
+def play(side_len=8):
     coordinates = core.get_coordinates(side_len)
     bb = core.BlackBox(coordinates, side_len)
     while True:
@@ -29,3 +28,6 @@ if __name__ == '__main__':
     for coordinate in coordinates:
         sleep(1)
         print(coordinate)
+
+if __name__ == '__main__':
+    play()
