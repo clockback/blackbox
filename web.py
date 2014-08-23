@@ -18,6 +18,8 @@ def get_header(title):
     <link rel='stylesheet' type='text/css'
           href='static/css/print.css'
           media='print' />
+    <script type="text/javascript" src="static/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="static/js/blackbox.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name='description'
         content="Blackbox puzzle game">
@@ -29,7 +31,7 @@ def get_header(title):
 def get_table(side_len):
     coordinates = core.get_coordinates(side_len)
     outer_row = "<tr>" + "<td></td>"*(side_len+2) + "</tr>"
-    mid_row = ("<tr><td></td>" + "<td class='inner_default'></td>"*side_len
+    mid_row = ("<tr><td></td>" + "<td align=center class='inner_default'><a href='/'><div class='block_link'>?</div></a></td>"*side_len
         + "<td></td></tr>")
     rows_html = (outer_row + "\n" + "\n".join([mid_row]*side_len) + "\n"
         + outer_row)

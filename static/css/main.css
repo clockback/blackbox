@@ -1,5 +1,23 @@
+h1 {
+    color: green;
+}
+
+table {
+    border-collapse: collapse;
+}
+
 td.inner_default {
     width: 20px;
     height: 20px;
-    background-color: red;
+    background-color: yellow;
+    border: 2px solid black;
+}
+
+td a:hover, td a:active, td a:link, td a:visited {
+    text-decoration: none;
+}
+
+.block_link {
+    height: 100%;
+    width: 100%;
 }
