@@ -1,6 +1,6 @@
 from flask import Flask
 
-from blackbox import core, web
+import web
 
 app = Flask(__name__)
 

@@ -28,7 +28,11 @@ def get_header(title):
 
 def get_table(side_len):
     coordinates = core.get_coordinates(side_len)
-    rows = ("\n    <tr><td class='inner_default'>" + "</td><td class='inner_default'>"*side_len + "</td></tr>")*side_len
+    outer_row = "<tr>" + "<td></td>"*(side_len+2) + "</tr>"
+    mid_row = ("<tr><td></td>" + "<td class='inner_default'></td>"*side_len
+        + "<td></td></tr>")
+    rows_html = (outer_row + "\n" + "\n".join([mid_row]*side_len) + "\n"
+        + outer_row)
     html = """
     <table>
     <tbody>
@@ -36,5 +40,5 @@ def get_table(side_len):
     
     </tbody>
     </table>
-    """.format(rows)
+    """.format(rows_html)
     return html
