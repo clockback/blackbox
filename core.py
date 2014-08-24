@@ -20,6 +20,8 @@ def get_coordinates(side_len=8):
     """
     This generates the required number of unique coordinates from square grid 
     of side_len.
+
+    Coordinates are 1-based so the top-left corner is (1,1).
     
     Essentially working from an side_len x side_len array. As coordinates are
     selected, they are removed from array which prevents possibility of repeats.

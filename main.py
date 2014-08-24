@@ -12,6 +12,7 @@ def get_game_init():
     {}
     <body>
     <h1>Blackbox</h1>
+    <p class='slogan'>The mind-bending puzzle</p>
     {}
     </body>
     </html>

@@ -13,6 +13,8 @@ def get_header(title):
     <html>
     <head>
     <title>{}</title>
+    <link rel="stylesheet" type="text/css"
+        media="all" href="http://fonts.googleapis.com/css?family=PT%20Sans" />
     <link rel='stylesheet' type='text/css'
           href='static/css/main.css' />
     <link rel='stylesheet' type='text/css'
@@ -29,12 +31,40 @@ def get_header(title):
     """.format(title)
 
 def get_table(side_len):
+    """
+    Number outer, non-corner cells from bottom left as 1 going around
+    anti-clockwise.
+    """
     coordinates = core.get_coordinates(side_len)
-    outer_row = "<tr>" + "<td></td>"*(side_len+2) + "</tr>"
-    mid_row = ("<tr><td></td>" + "<td align=center class='inner_default'><a href='/'><div class='block_link'>?</div></a></td>"*side_len
-        + "<td></td></tr>")
-    rows_html = (outer_row + "\n" + "\n".join([mid_row]*side_len) + "\n"
-        + outer_row)
+    # top row
+    top_cells = []
+    for i in range(3*side_len-1, 2*side_len-1, -1):
+        top_cells.append("<td class='outer_default'><a href='/'><div class='block_link'>{}</div></a></td>".format(i+1))
+    top_cells_html = "".join(top_cells)
+    top_row_html = ("<tr><td class='corner'></td>" + top_cells_html
+        + "<td class='corner'></td></tr>")
+    # middle
+    right_col = range(2*side_len, side_len, -1)
+    left_col = range(3*side_len+1, 4*side_len+1)
+    colnums = zip(left_col, right_col)
+    inside_mid_row = ("<td align=center class='inner_default'>"
+        + "<a href='/'><div class='block_link'></div></a>"
+        + "</td>")*side_len
+    mid_rows = []
+    for l_num, r_num in colnums:
+        mid_row = ("<tr><td class='outer_default'><a href='/'><div class='block_link'>{}</div></a></td>".format(l_num)
+        + inside_mid_row + "<td class='outer_default'><a href='/'><div class='block_link'>{}</div></a></td></tr>".format(r_num))
+        mid_rows.append(mid_row)
+    mid_rows_html = "\n".join(mid_rows)
+    # bottom row
+    bottom_cells = []
+    for i in range(side_len):
+        bottom_cells.append("<td class='outer_default'><a href='/'><div class='block_link'>{}</div></a></td>".format(i+1))
+    bottom_cells_html = "".join(bottom_cells)
+    bottom_row_html = ("<tr><td class='corner'></td>" + bottom_cells_html
+        + "<td class='corner'></td></tr>")
+    # assemble
+    rows_html = top_row_html + "\n" + mid_rows_html + "\n" + bottom_row_html
     html = """
     <table>
     <tbody>
