@@ -20,7 +20,7 @@ def get_header(title):
     <link rel='stylesheet' type='text/css'
           href='static/css/print.css'
           media='print' />
-    <script type="text/javascript" src="static/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
     <script type="text/javascript" src="static/js/blackbox.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name='description'
@@ -39,7 +39,7 @@ def get_table(side_len):
     # top row
     top_cells = []
     for i in range(3*side_len-1, 2*side_len-1, -1):
-        top_cells.append("<td class='outer_default'><a href='/'><div class='block_link'>{}</div></a></td>".format(i+1))
+        top_cells.append("<td class='outer_default'>{}</td>".format(i+1))
     top_cells_html = "".join(top_cells)
     top_row_html = ("<tr><td class='corner'></td>" + top_cells_html
         + "<td class='corner'></td></tr>")
@@ -48,18 +48,17 @@ def get_table(side_len):
     left_col = range(3*side_len+1, 4*side_len+1)
     colnums = zip(left_col, right_col)
     inside_mid_row = ("<td align=center class='inner_default'>"
-        + "<a href='/'><div class='block_link'></div></a>"
         + "</td>")*side_len
     mid_rows = []
     for l_num, r_num in colnums:
-        mid_row = ("<tr><td class='outer_default'><a href='/'><div class='block_link'>{}</div></a></td>".format(l_num)
-        + inside_mid_row + "<td class='outer_default'><a href='/'><div class='block_link'>{}</div></a></td></tr>".format(r_num))
+        mid_row = ("<tr><td class='outer_default'>{}</td>".format(l_num)
+        + inside_mid_row + "<td class='outer_default'>{}</td></tr>".format(r_num))
         mid_rows.append(mid_row)
     mid_rows_html = "\n".join(mid_rows)
     # bottom row
     bottom_cells = []
     for i in range(side_len):
-        bottom_cells.append("<td class='outer_default'><a href='/'><div class='block_link'>{}</div></a></td>".format(i+1))
+        bottom_cells.append("<td class='outer_default'>{}</td>".format(i+1))
     bottom_cells_html = "".join(bottom_cells)
     bottom_row_html = ("<tr><td class='corner'></td>" + bottom_cells_html
         + "<td class='corner'></td></tr>")

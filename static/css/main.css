@@ -19,6 +19,9 @@ table {
 td {
     width: 30px;
     height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: white;
 }
 
 td.inner_default {
@@ -39,10 +42,3 @@ td a:hover, td a:active, td a:link, td a:visited {
     text-decoration: none;
 }
 
-.block_link {
-    line-height: 30px;
-    height: 100%;
-    width: 100%;
-    text-align: center;
-    color: white;
-}

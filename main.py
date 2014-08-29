@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, request
+import json
 
 import web
 
@@ -18,6 +19,11 @@ def get_game_init():
     </html>
     """.format(header_html, table_html)
     return html
+    
+@app.route("/get_feedback", methods = ['POST'])
+def get_feedback():
+    number = request.form['number']
+    return json.dumps([number,])
 
 if __name__ == "__main__":
     app.debug = True
