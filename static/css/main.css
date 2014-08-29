@@ -24,14 +24,15 @@ td {
     color: white;
 }
 
-td.inner_default {
+td.middle {
     background-color: #0182a9;
     border: 1px solid white;
 }
 
-td.outer_default {
+td.numbered {
     background-color: grey;
     border: 1px solid white;
+    cursor: pointer;
 }
 
 td.corner {

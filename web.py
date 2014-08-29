@@ -39,7 +39,7 @@ def get_table(side_len):
     # top row
     top_cells = []
     for i in range(3*side_len-1, 2*side_len-1, -1):
-        top_cells.append("<td class='outer_default'>{}</td>".format(i+1))
+        top_cells.append("<td class='numbered'>{}</td>".format(i+1))
     top_cells_html = "".join(top_cells)
     top_row_html = ("<tr><td class='corner'></td>" + top_cells_html
         + "<td class='corner'></td></tr>")
@@ -47,18 +47,18 @@ def get_table(side_len):
     right_col = range(2*side_len, side_len, -1)
     left_col = range(3*side_len+1, 4*side_len+1)
     colnums = zip(left_col, right_col)
-    inside_mid_row = ("<td align=center class='inner_default'>"
+    inside_mid_row = ("<td align=center class='middle'>"
         + "</td>")*side_len
     mid_rows = []
     for l_num, r_num in colnums:
-        mid_row = ("<tr><td class='outer_default'>{}</td>".format(l_num)
-        + inside_mid_row + "<td class='outer_default'>{}</td></tr>".format(r_num))
+        mid_row = ("<tr><td class='numbered'>{}</td>".format(l_num)
+        + inside_mid_row + "<td class='numbered'>{}</td></tr>".format(r_num))
         mid_rows.append(mid_row)
     mid_rows_html = "\n".join(mid_rows)
     # bottom row
     bottom_cells = []
     for i in range(side_len):
-        bottom_cells.append("<td class='outer_default'>{}</td>".format(i+1))
+        bottom_cells.append("<td class='numbered'>{}</td>".format(i+1))
     bottom_cells_html = "".join(bottom_cells)
     bottom_row_html = ("<tr><td class='corner'></td>" + bottom_cells_html
         + "<td class='corner'></td></tr>")
