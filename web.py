@@ -39,7 +39,8 @@ def get_table(side_len):
     # top row
     top_cells = []
     for i in range(3*side_len-1, 2*side_len-1, -1):
-        top_cells.append("<td class='numbered'>{}</td>".format(i+1))
+        top_cells.append("<td class='numbered' id='{num}'>{num}</td>"
+            .format(num=i+1))
     top_cells_html = "".join(top_cells)
     top_row_html = ("<tr><td class='corner'></td>" + top_cells_html
         + "<td class='corner'></td></tr>")
@@ -50,14 +51,17 @@ def get_table(side_len):
     inside_mid_row = ("<td align=center class='middle'></td>")*side_len
     mid_rows = []
     for l_num, r_num in colnums:
-        mid_row = ("<tr><td class='numbered'>{}</td>".format(l_num)
-        + inside_mid_row + "<td class='numbered'>{}</td></tr>".format(r_num))
+        mid_row = ("<tr><td class='numbered' id='{num}'>{num}</td>"
+            .format(num=l_num)
+        + inside_mid_row + "<td class='numbered' id='{num}'>{num}</td></tr>"
+            .format(num=r_num))
         mid_rows.append(mid_row)
     mid_rows_html = "\n".join(mid_rows)
     # bottom row
     bottom_cells = []
     for i in range(side_len):
-        bottom_cells.append("<td class='numbered'>{}</td>".format(i+1))
+        bottom_cells.append("<td class='numbered' id='{num}'>{num}</td>"
+            .format(num=i+1))
     bottom_cells_html = "".join(bottom_cells)
     bottom_row_html = ("<tr><td class='corner'></td>" + bottom_cells_html
         + "<td class='corner'></td></tr>")

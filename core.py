@@ -8,7 +8,7 @@ from collections import namedtuple
 import json
 from random import choice, randint
 
-debug = True
+debug = False
 
 Coord = namedtuple('Coord', ('x', 'y'))
 Vector = namedtuple('Vector', ('dx', 'dy')) # taken with origin at top left as 0,0

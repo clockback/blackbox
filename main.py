@@ -14,16 +14,20 @@ def get_game_init():
     table_html = web.get_table(side_len)
     coordinates = core.coords2json(core.get_coordinates(side_len))
     html = """
-    {}
+    {header}
     <body>
     <h1>Blackbox</h1>
     <p class='slogan'>The mind-bending puzzle</p>
-    <p id='coords'>{}</p>
+    <p id='coords'>{coords}</p>
+    <p id='starting_score'>{score}</p>
     <p id='feedback'>Start by clicking on the numbers ...</p>
-    {}
+    <p id='debug'>Debugging information here ...</p>
+    {table}
+    <p id='score'>Score: {score} points</p>
     </body>
     </html>
-    """.format(header_html, coordinates, table_html)
+    """.format(header=header_html, coords=coordinates, table=table_html,
+        score=side_len*4)
     return html
     
 @app.route("/get_feedback", methods = ['POST'])

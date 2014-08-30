@@ -55,7 +55,7 @@ td a:hover, td a:active, td a:link, td a:visited {
     text-decoration: none;
 }
 
-p#coords {
+p#coords, p#starting_score, p#debug {
     display: none;
 }
 
