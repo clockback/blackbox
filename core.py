@@ -5,7 +5,10 @@ Core functionality. Separated from usage by web, cli etc interfaces.
 """
 
 from collections import namedtuple
+import json
 from random import choice, randint
+
+debug = True
 
 Coord = namedtuple('Coord', ('x', 'y'))
 Vector = namedtuple('Vector', ('dx', 'dy')) # taken with origin at top left as 0,0
@@ -41,123 +44,148 @@ def get_coordinates(side_len=8):
         coordinates.append(Coord(x, y))
     return coordinates
 
+def coords2json(coords):
+    """
+    coords -- named tuples - need to convert to plain python data structure 
+    and then into json string.
+    """
+    plain_coords = [coord2plain(coord) for coord in coords]
+    return json.dumps(plain_coords)
 
-class BlackBox(object):
+def coord2plain(coord):
+    json_coord = [coord.x, coord.y]
+    return json_coord
+
+def coords_str2coords(coords_str):
+    raw_coords = json.loads(coords_str)
+    coords = [Coord(raw_coord[0], raw_coord[1]) 
+        for raw_coord in raw_coords]
+    return coords
+
+def coords_to_num(side_len, contact):
     """
-    This is the Black Box game.
+    This converts the coordinates into the number position.
     """
-    def __init__(self, coordinates, side_len):
-        """
-        This contains all the components of the black box.
-        """
-        self.coordinates = coordinates
-        self.side_len = side_len
+    num = None
+    if contact.y == side_len + 1:
+        num = contact.x
+    elif contact.x == side_len + 1:
+        num = (2 * side_len) + 1 - contact.y
+    elif contact.y == 0:
+        num = (side_len * 3) + 1 - contact.x
+    elif contact.x == 0:
+        num = contact.y + (side_len * 3)
+    if num is None:
+        raise Exception("Non-edge coordinate received. "
+            "Orig coord x: {}, y: {}".format(contact.x, contact.y))
+    return num
+
+def check_and_reset(side_len, coordinates, pos, direction):
+    """
+    This checks to see if the ray has intercepted a point. Check each of 
+    the coordinates separately.
     
-    def exit_ray(self, entry):
-        """
-        Receives incoming ray number, sets initial direction and position, and 
-        returns outgoing ray number.
-        
-        Processed in one-move steps in which position and direction may be 
-        reset. Thus the loop. E.g. we might get None back several times before 
-        we hit something or exit.
-        """
-        # Set initial direction and position. Always a square.
-        if 1 <= entry <= self.side_len:
-            self.direction = MOVE_UP
-            self.pos = Coord(entry, self.side_len + 1)
-        elif self.side_len + 1 <= entry <= self.side_len * 2:
-            self.direction = MOVE_LEFT
-            self.pos = Coord(self.side_len + 1, self.side_len * 2 + 1 - entry)
-        elif self.side_len * 2 + 1 <= entry <= self.side_len * 3:
-            self.direction = MOVE_DOWN
-            self.pos = Coord(self.side_len * 3 + 1 - entry, 0)
-        elif self.side_len * 3 + 1 <= entry <= self.side_len * 4:
-            self.direction = MOVE_RIGHT
-            self.pos = Coord(0, entry - self.side_len * 3)
+    Resets position and direction as required ready for next step.
+    
+    Returns DNE if it does not emerge.
+    """
+    orig_dir = Vector(direction.dx, direction.dy)
+    corner_hits = 0
+    next_spot = Coord(pos.x + direction.dx, pos.y + direction.dy)
+    for coordinate in coordinates:
+        if coordinate == next_spot:
+            contact = DNE
+            return contact, pos, direction # Did not emerge
+        elif orig_dir.dx: # If it moves in the x direction.
+            if coordinate == Coord(next_spot.x, next_spot.y - 1): # If above
+                direction = MOVE_DOWN
+                corner_hits += 1
+                if (pos.x in (0, side_len + 1) or pos.y
+                        in (0, side_len + 1)):
+                    contact = pos
+                    return contact, pos, direction
+            elif coordinate == Coord(next_spot.x, next_spot.y + 1): # If below
+                direction = MOVE_UP
+                corner_hits += 1
+                if (pos.x in (0, side_len + 1) or pos.y in
+                    (0, side_len + 1)):
+                    contact = pos
+                    return contact, pos, direction
+        elif orig_dir.dy: # If it moves in the y direction.
+            if coordinate == Coord(next_spot.x - 1, next_spot.y): # If left
+                direction = MOVE_RIGHT
+                corner_hits += 1
+                if (pos.x in (0, side_len + 1) or pos.y in
+                        (0, side_len + 1)):
+                    contact = pos
+                    return contact, pos, direction
+            elif coordinate == Coord(next_spot.x + 1, next_spot.y): # If right
+                direction = MOVE_LEFT
+                corner_hits += 1
+                if (pos.x in (0, side_len + 1) or pos.y in
+                        (0, side_len + 1)):
+                    contact = pos
+                    return contact, pos, direction
+    if corner_hits > 1:
+        direction = Vector(orig_dir.dx * -1, orig_dir.dy * -1)
+    next_spot = Coord(pos.x + direction.dx, pos.y + direction.dy)
+    pos = next_spot
+    if (pos.x in (0, side_len + 1) 
+            or pos.y in (0, side_len + 1)):
+        contact = pos
+        return contact, pos, direction
+    contact = None
+    return contact, pos, direction
+
+def exit_ray(side_len, coordinates, entry):
+    """
+    Receives incoming ray number, sets initial direction and position, and 
+    returns outgoing ray number if possible. Output must be json string.
+    
+    Processed in one-move steps in which position and direction may be 
+    reset. Thus the loop. E.g. we might get None back several times before 
+    we hit something or exit.
+    """
+    if debug:
+        print("side_len: {}".format(side_len))
+        print("coordinates: {}".format(coordinates))
+        print("entry: {}".format(entry))
+    # Set initial direction and position. Always a square.
+    if 1 <= entry <= side_len:
+        direction = MOVE_UP
+        pos = Coord(entry, side_len + 1)
+    elif side_len + 1 <= entry <= side_len * 2:
+        direction = MOVE_LEFT
+        pos = Coord(side_len + 1, side_len * 2 + 1 - entry)
+    elif side_len * 2 + 1 <= entry <= side_len * 3:
+        direction = MOVE_DOWN
+        pos = Coord(side_len * 3 + 1 - entry, 0)
+    elif side_len * 3 + 1 <= entry <= side_len * 4:
+        direction = MOVE_RIGHT
+        pos = Coord(0, entry - side_len * 3)
+    else:
+        raise Exception("Unexpected entry value: {}".format(entry))
+    outgoing = None
+    while True:
+        contacted, pos, direction = check_and_reset(side_len, coordinates, pos,
+            direction) # resetting means the result of the check will change each loop
+        if contacted == DNE:
+            outgoing = contacted
+            break
+        elif isinstance(contacted, Coord):
+            outgoing = abs(coords_to_num(side_len, contacted))
+            break
+        elif contacted is None:
+            continue
         else:
-            raise Exception("Unexpected entry value: {}".format(entry))
-        outgoing = None
-        while True:
-            contacted = self.check_and_reset() # resetting means the result of the check will change each loop
-            if contacted == DNE:
-                outgoing = contacted
-                break
-            elif isinstance(contacted, Coord):
-                outgoing = abs(self.coords_to_numb(contacted))
-                break
-            elif contacted is None:
-                continue
-            else:
-                raise TypeError("Unexpected value of contacted "
-                    "received: {}".format(contacted))
-        return outgoing
-    
-    def check_and_reset(self):
-        """
-        This checks to see if the ray has intercepted a point. Check each of 
-        the 4 coordinates separately.
-        
-        Resets position and direction as required ready for next step.
-        
-        Returns DNE if it does not emerge.
-        """
-        orig_dir = Vector(self.direction.dx, self.direction.dy)
-        corner_hits = 0
-        next_spot = Coord(self.pos.x + self.direction.dx, 
-            self.pos.y + self.direction.dy)
-        for coordinate in self.coordinates:
-            if coordinate == next_spot:
-                return DNE # Did not emerge
-            elif orig_dir.dx: # If it moves in the x direction.
-                if coordinate == Coord(next_spot.x, next_spot.y - 1): # If above
-                    self.direction = MOVE_DOWN
-                    corner_hits += 1
-                    if (self.pos.x in (0, self.side_len + 1) or self.pos.y in
-                        (0, self.side_len + 1)):
-                        return self.pos
-                elif coordinate == Coord(next_spot.x, next_spot.y + 1): # If below
-                    self.direction = MOVE_UP
-                    corner_hits += 1
-                    if (self.pos.x in (0, self.side_len + 1) or self.pos.y in
-                        (0, self.side_len + 1)):
-                        return self.pos
-            elif orig_dir.dy: # If it moves in the y direction.
-                if coordinate == Coord(next_spot.x - 1, next_spot.y): # If left
-                    self.direction = MOVE_RIGHT
-                    corner_hits += 1
-                    if (self.pos.x in (0, self.side_len + 1) or self.pos.y in
-                        (0, self.side_len + 1)):
-                        return self.pos
-                elif coordinate == Coord(next_spot.x + 1, next_spot.y): # If right
-                    self.direction = MOVE_LEFT
-                    corner_hits += 1
-                    if (self.pos.x in (0, self.side_len + 1) or self.pos.y in
-                        (0, self.side_len + 1)):
-                        return self.pos
-        if corner_hits > 1:
-            self.direction = Vector(orig_dir.dx * -1, orig_dir.dy * -1)
-        next_spot = Coord(self.pos.x + self.direction.dx, 
-            self.pos.y + self.direction.dy)
-        self.pos = next_spot
-        if (self.pos.x in (0, self.side_len + 1) 
-                or self.pos.y in (0, self.side_len + 1)):
-            return self.pos
-    
-    def coords_to_numb(self, contact):
-        """
-        This converts the coordinates into the number position.
-        """
-        numb = None
-        if contact.y == self.side_len + 1:
-            numb = contact.x
-        elif contact.x == self.side_len + 1:
-            numb = (2 * self.side_len) + 1 - contact.y
-        elif contact.y == 0:
-            numb = (self.side_len * 3) + 1 - contact.x
-        elif contact.x == 0:
-            numb = contact.y + (self.side_len * 3)
-        if numb is None:
-            raise Exception("Non-edge coordinate received. "
-                "Orig coord x: {}, y: {}".format(contact.x, contact.y))
-        return numb
+            raise TypeError("Unexpected value of contacted "
+                "received: {}".format(contacted))
+    return outgoing
+
+if __name__ == "__main__":
+    side_len = 8
+    coordinates = [Coord(x=1, y=1), Coord(x=1, y=7), Coord(x=8, y=6), Coord(x=7, y=1)]
+    entry = 4
+    outgoing = exit_ray(side_len, coordinates, entry)
+    if debug: print("outgoing: {}".format(outgoing))
+

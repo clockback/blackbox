@@ -4,33 +4,34 @@ import json
 import core
 import web
 
+side_len = 8
+
 app = Flask(__name__)
 
 @app.route("/")
 def get_game_init():
     header_html = web.get_header(title="Blackbox game")
-    table_html = web.get_table(side_len=8)
+    table_html = web.get_table(side_len)
+    coordinates = core.coords2json(core.get_coordinates(side_len))
     html = """
     {}
     <body>
     <h1>Blackbox</h1>
     <p class='slogan'>The mind-bending puzzle</p>
+    <p id='coords'>{}</p>
+    <p id='feedback'>Start by clicking on the numbers ...</p>
     {}
     </body>
     </html>
-    """.format(header_html, table_html)
+    """.format(header_html, coordinates, table_html)
     return html
     
 @app.route("/get_feedback", methods = ['POST'])
 def get_feedback():
-    number = request.form['number']
-    fname = request.form['fname']
-    
-    
-    
-    
-    
-    return json.dumps([fname, number])
+    entry = int(request.form['entry'])
+    coordinates = core.coords_str2coords(request.form['coords_str'])
+    output_num = core.exit_ray(side_len, coordinates, entry)
+    return json.dumps(output_num)
 
 if __name__ == "__main__":
     app.debug = True

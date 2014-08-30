@@ -47,8 +47,7 @@ def get_table(side_len):
     right_col = range(2*side_len, side_len, -1)
     left_col = range(3*side_len+1, 4*side_len+1)
     colnums = zip(left_col, right_col)
-    inside_mid_row = ("<td align=center class='middle'>"
-        + "</td>")*side_len
+    inside_mid_row = ("<td align=center class='middle'></td>")*side_len
     mid_rows = []
     for l_num, r_num in colnums:
         mid_row = ("<tr><td class='numbered'>{}</td>".format(l_num)

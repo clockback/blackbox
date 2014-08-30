@@ -4,12 +4,12 @@ html {
 }
 
 h1 {
-    font-size: 32px;
+    font-size: 34px;
     margin: 12px 0 6px 0;
 }
 .slogan {
     margin: 0 0 16px 0;
-    font-size: 18px;
+    font-size: 19px;
 }
 
 table {
@@ -29,6 +29,18 @@ td.middle {
     border: 1px solid white;
 }
 
+td.flagged {
+    background-position: 50% 50%;
+    background-image: url('/static/images/flag.png');
+    background-repeat: no-repeat;
+}
+
+td.question {
+    background-position: 50% 50%;
+    background-image: url('/static/images/question.png');
+    background-repeat: no-repeat;
+}
+
 td.numbered {
     background-color: grey;
     border: 1px solid white;
@@ -41,5 +53,9 @@ td.corner {
 
 td a:hover, td a:active, td a:link, td a:visited {
     text-decoration: none;
+}
+
+p#coords {
+    display: none;
 }
 
