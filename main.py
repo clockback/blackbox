@@ -19,15 +19,14 @@ def get_game_init():
     <h1>Blackbox</h1>
     <p class='slogan'>The mind-bending puzzle</p>
     <p id='coords'>{coords}</p>
-    <p id='starting_score'>{score}</p>
     <p id='feedback'>Start by clicking on the numbers ...</p>
     <p id='debug'>Debugging information here ...</p>
     {table}
-    <p id='score'>Score: {score} points</p>
+    <p id='score'>Score: 0 points</p>
+    <button type="button" id='reveal'>Done</button> 
     </body>
     </html>
-    """.format(header=header_html, coords=coordinates, table=table_html,
-        score=side_len*4)
+    """.format(header=header_html, coords=coordinates, table=table_html)
     return html
     
 @app.route("/get_feedback", methods = ['POST'])
