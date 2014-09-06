@@ -59,3 +59,31 @@ p#coords, p#starting_score, p#debug {
     display: none;
 }
 
+/* jQuery UI **************************************************************** */
+.no-close .ui-dialog-titlebar-close {
+    display: none;
+}
+.ui-widget-header, .ui-dialog-title {
+    background-color: #0182a9;
+    background-image: none;
+}
+.ui-widget-header {
+    border: 1px solid #016988;
+}
+
+.ui-state-default.ui-button-text-only {
+    color: #016988;
+}
+.ui-state-default.ui-state-focus {
+    background-color: #eaf4ec;
+    background-image: none;
+    border-color: #016988;
+    border-width: 1px;
+    color: black;
+}
+.ui-state-default.ui-state-hover {
+    background-color: #eaf4ec;
+    background-image: none;
+    border-color: #ccc;
+    color: black;
+}

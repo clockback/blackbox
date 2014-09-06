@@ -16,11 +16,14 @@ def get_header(title):
     <link rel="stylesheet" type="text/css"
         media="all" href="http://fonts.googleapis.com/css?family=PT%20Sans" />
     <link rel='stylesheet' type='text/css'
+          href='static/css/jquery-ui.min.css' />
+    <link rel='stylesheet' type='text/css'
           href='static/css/main.css' />
     <link rel='stylesheet' type='text/css'
           href='static/css/print.css'
           media='print' />
     <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="static/js/blackbox.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name='description'

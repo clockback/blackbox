@@ -23,7 +23,8 @@ def get_game_init():
     <p id='debug'>Debugging information here ...</p>
     {table}
     <p id='score'>Score: 0 points</p>
-    <button type="button" id='reveal'>Done</button> 
+    <button type="button" id='reveal'">Done</button>
+    <div id="dialog" title="Feedback" style="display: none;"></div>
     </body>
     </html>
     """.format(header=header_html, coords=coordinates, table=table_html)

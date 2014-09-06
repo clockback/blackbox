@@ -94,5 +94,36 @@ $( document ).ready(function() {
             $("#reveal").attr('disabled', 'disabled');
         };
     });
+
+    function feedback(details) {
+        $("#dialog").html("<p>" + details + "</p>");
+        $("#dialog").dialog({
+            title: "Score results",
+            autoOpen: false,
+            width: 400,
+            dialogClass: "no-close",
+            buttons: [
+	            {
+		            text: "Cool",
+		            click: function() {
+			            $( this ).dialog("close");
+		            }
+	            },
+	            {
+		            text: "Hmmm",
+		            click: function() {
+			            $( this ).dialog("close");
+		            }
+	            }
+            ]
+        });
+        $("#dialog").dialog("open");
+    };
+    
+    $("#reveal").click(function(){
+        feedback("Hi there Elliot!");
+    });
+
+   
 });
 
