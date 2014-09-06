@@ -38,7 +38,7 @@ def get_table(side_len):
     Number outer, non-corner cells from bottom left as 1 going around
     anti-clockwise.
     """
-    coordinates = core.get_coordinates(side_len)
+    coordinates = core.get_atom_coords(side_len)
     # top row
     top_cells = []
     for i in range(3*side_len-1, 2*side_len-1, -1):
@@ -48,16 +48,22 @@ def get_table(side_len):
     top_row_html = ("<tr><td class='corner'></td>" + top_cells_html
         + "<td class='corner'></td></tr>")
     # middle
-    right_col = range(2*side_len, side_len, -1)
-    left_col = range(3*side_len+1, 4*side_len+1)
-    colnums = zip(left_col, right_col)
-    inside_mid_row = ("<td align=center class='middle'></td>")*side_len
+    right_entry_nums = range(2*side_len, side_len, -1)
+    left_entry_nums = range(3*side_len+1, 4*side_len+1)
+    entry_num_pairs = zip(left_entry_nums, right_entry_nums)
     mid_rows = []
-    for l_num, r_num in colnums:
-        mid_row = ("<tr><td class='numbered' id='{num}'>{num}</td>"
-            .format(num=l_num)
-        + inside_mid_row + "<td class='numbered' id='{num}'>{num}</td></tr>"
-            .format(num=r_num))
+    for y, entry_num_pair in enumerate(entry_num_pairs,1):
+        left_entry_num, right_entry_num = entry_num_pair
+        inside_mid_row_list = []
+        for x in range(1,side_len+1):
+            coord_id = "{},{}".format(x,y)
+            inside_mid_row_list.append("<td align=center class='middle' "
+                "id='{coord_id}'></td>".format(coord_id=coord_id))
+        inside_mid_row = "\n".join(inside_mid_row_list)
+        mid_row = ("<tr><td class='numbered' id='{num}'>{num}</td>\n"
+                .format(num=left_entry_num)
+            + inside_mid_row + "\n<td class='numbered' "
+                "id='{num}'>{num}</td></tr>".format(num=right_entry_num))
         mid_rows.append(mid_row)
     mid_rows_html = "\n".join(mid_rows)
     # bottom row

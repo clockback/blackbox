@@ -19,7 +19,7 @@ MOVE_DOWN = Vector(0, 1)
 MOVE_LEFT = Vector(-1, 0)
 MOVE_RIGHT = Vector(1, 0)
 
-def get_coordinates(side_len=8):
+def get_atom_coords(side_len=8):
     """
     This generates the required number of unique coordinates from square grid 
     of side_len.
@@ -29,7 +29,7 @@ def get_coordinates(side_len=8):
     Essentially working from an side_len x side_len array. As coordinates are
     selected, they are removed from array which prevents possibility of repeats.
     """
-    coordinates = []
+    atom_coords = []
     possible_y = {}
     i = 0
     while i < side_len:
@@ -41,8 +41,8 @@ def get_coordinates(side_len=8):
         x = randint(1, side_len)
         y = choice(possible_y[x])
         possible_y[x].remove(y)
-        coordinates.append(Coord(x, y))
-    return coordinates
+        atom_coords.append(Coord(x, y))
+    return atom_coords
 
 def coords2json(coords):
     """
@@ -80,7 +80,7 @@ def coords_to_num(side_len, contact):
             "Orig coord x: {}, y: {}".format(contact.x, contact.y))
     return num
 
-def check_and_reset(side_len, coordinates, pos, direction):
+def check_and_reset(side_len, atom_coords, pos, direction):
     """
     This checks to see if the ray has intercepted a point. Check each of 
     the coordinates separately.
@@ -92,19 +92,19 @@ def check_and_reset(side_len, coordinates, pos, direction):
     orig_dir = Vector(direction.dx, direction.dy)
     corner_hits = 0
     next_spot = Coord(pos.x + direction.dx, pos.y + direction.dy)
-    for coordinate in coordinates:
-        if coordinate == next_spot:
+    for atom_coord in atom_coords:
+        if atom_coord == next_spot:
             contact = DNE
             return contact, pos, direction # Did not emerge
         elif orig_dir.dx: # If it moves in the x direction.
-            if coordinate == Coord(next_spot.x, next_spot.y - 1): # If above
+            if atom_coord == Coord(next_spot.x, next_spot.y - 1): # If above
                 direction = MOVE_DOWN
                 corner_hits += 1
                 if (pos.x in (0, side_len + 1) or pos.y
                         in (0, side_len + 1)):
                     contact = pos
                     return contact, pos, direction
-            elif coordinate == Coord(next_spot.x, next_spot.y + 1): # If below
+            elif atom_coord == Coord(next_spot.x, next_spot.y + 1): # If below
                 direction = MOVE_UP
                 corner_hits += 1
                 if (pos.x in (0, side_len + 1) or pos.y in
@@ -112,14 +112,14 @@ def check_and_reset(side_len, coordinates, pos, direction):
                     contact = pos
                     return contact, pos, direction
         elif orig_dir.dy: # If it moves in the y direction.
-            if coordinate == Coord(next_spot.x - 1, next_spot.y): # If left
+            if atom_coord == Coord(next_spot.x - 1, next_spot.y): # If left
                 direction = MOVE_RIGHT
                 corner_hits += 1
                 if (pos.x in (0, side_len + 1) or pos.y in
                         (0, side_len + 1)):
                     contact = pos
                     return contact, pos, direction
-            elif coordinate == Coord(next_spot.x + 1, next_spot.y): # If right
+            elif atom_coord == Coord(next_spot.x + 1, next_spot.y): # If right
                 direction = MOVE_LEFT
                 corner_hits += 1
                 if (pos.x in (0, side_len + 1) or pos.y in
@@ -137,7 +137,7 @@ def check_and_reset(side_len, coordinates, pos, direction):
     contact = None
     return contact, pos, direction
 
-def exit_ray(side_len, coordinates, entry):
+def exit_ray(side_len, atom_coords, entry):
     """
     Receives incoming ray number, sets initial direction and position, and 
     returns outgoing ray number if possible. Output must be json string.
@@ -148,7 +148,7 @@ def exit_ray(side_len, coordinates, entry):
     """
     if debug:
         print("side_len: {}".format(side_len))
-        print("coordinates: {}".format(coordinates))
+        print("atom_coords: {}".format(atom_coords))
         print("entry: {}".format(entry))
     # Set initial direction and position. Always a square.
     if 1 <= entry <= side_len:
@@ -167,7 +167,7 @@ def exit_ray(side_len, coordinates, entry):
         raise Exception("Unexpected entry value: {}".format(entry))
     outgoing = None
     while True:
-        contacted, pos, direction = check_and_reset(side_len, coordinates, pos,
+        contacted, pos, direction = check_and_reset(side_len, atom_coords, pos,
             direction) # resetting means the result of the check will change each loop
         if contacted == DNE:
             outgoing = contacted
@@ -184,8 +184,8 @@ def exit_ray(side_len, coordinates, entry):
 
 if __name__ == "__main__":
     side_len = 8
-    coordinates = [Coord(x=1, y=1), Coord(x=1, y=7), Coord(x=8, y=6), Coord(x=7, y=1)]
+    atom_coords = [Coord(x=1, y=1), Coord(x=1, y=7), Coord(x=8, y=6), Coord(x=7, y=1)]
     entry = 4
-    outgoing = exit_ray(side_len, coordinates, entry)
+    outgoing = exit_ray(side_len, atom_coords, entry)
     if debug: print("outgoing: {}".format(outgoing))
 
