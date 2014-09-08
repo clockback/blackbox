@@ -25,6 +25,7 @@ var colours = [
     'Tomato', 'Turquoise', 'Violet',
     'YellowGreen']
 var flagged_class = "flagged";
+var finished = false;
 
 $( document ).ready(function() {
     
@@ -77,11 +78,15 @@ $( document ).ready(function() {
             if(response == '"Did Not Emerge"'){
                 var feedback = entry + " did not emerge";
                 cell.text("?");
-                score++;
+                if(!finished){
+                    score++;
+                };
             } else if (response == entry) {
                 var feedback = entry + " came back to itself";
                 cell.text("b");
-                score++;
+                if(!finished){
+                    score++;
+                };
             } else {
                 var feedback = entry + " emerged at " + response;
                 var recipient_feedback = response + " came from " + entry;
@@ -90,13 +95,17 @@ $( document ).ready(function() {
                 recipient_cell.addClass("already_clicked");
                 add_simple_tooltip(recipient_cell, recipient_feedback);
                 $("td#" + response).css("background-color", web_colour);
-                score = score + 2;
+                if(!finished){
+                    score = score + 2;
+                };
             }
             add_simple_tooltip(cell, feedback);
-            if(score == 1){
-                $("p#score").text("Score: " + score + " point");
-            } else {
-                $("p#score").text("Score: " + score + " points");
+            if(!finished){
+                if(score == 1){
+                    $("p#score").text("Score: " + score + " point");
+                } else {
+                    $("p#score").text("Score: " + score + " points");
+                };
             };
             $("p#feedback").text(feedback);
             //$("p#debug").text(web_colour);
@@ -107,6 +116,9 @@ $( document ).ready(function() {
     var flags_n = 0;
     $("#reveal").attr('disabled', 'disabled');
     $("td.middle").click(function(){
+        if(finished){
+            return;
+        };
         var cell = $(this);
         if(cell.hasClass(flagged_class)){
             cell.removeClass(flagged_class);
@@ -146,6 +158,10 @@ $( document ).ready(function() {
     };
     
     $("#reveal").click(function(){
+        finished = true;
+        $("#feedback").text("Game finished (but you can still click any "
+            + "unclicked entry numbers to see how they work)");
+        $("#score").text("Final " + $("#score").text());
         var flagged_cells = $("." + flagged_class);
         var flag_coords = [];
         for (var i = 0; i < flagged_cells.length; i++) {

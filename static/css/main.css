@@ -80,6 +80,11 @@ p#atom_coords, p#starting_score, p#debug {
 #dialog {
 }
 
+#feedback {
+    width: 400px;
+    height: 40px;
+}
+
 #tooltip {
     z-index: 2500;
     padding: 5px;
