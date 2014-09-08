@@ -13,14 +13,16 @@ app = Flask(__name__)
 def get_game_init():
     header_html = web.get_header(title="Blackbox game")
     table_html = web.get_table(side_len)
-    atom_coords = core.coords2json(core.get_atom_coords(side_len))
+    atom_coords = core.get_atom_coords(side_len)
+    atom_coords_str = core.coords2json(atom_coords)
     html = """
     {header}
     <body>
     <h1>Blackbox</h1>
     <p class='slogan'>The mind-bending puzzle</p>
-    <p id='atom_coords'>{atom_coords}</p>
-    <p id='feedback'>Start by clicking on the numbers ...</p>
+    <p id='atom_coords'>{atom_coords_str}</p>
+    <p id='feedback'>You have {atoms_n} atoms to find - start by clicking on
+    the numbers ...</p>
     <p id='debug'>Debugging information here ...</p>
     {table}
     <p id='score'>Score: 0 points</p>
@@ -28,7 +30,8 @@ def get_game_init():
     <div id="dialog" title="Feedback" style="display: none;"></div>
     </body>
     </html>
-    """.format(header=header_html, atom_coords=atom_coords, table=table_html)
+    """.format(header=header_html, atom_coords_str=atom_coords_str,
+        table=table_html, atoms_n=len(atom_coords))
     return html
     
 @app.route("/get_feedback", methods = ['POST'])
@@ -60,6 +63,6 @@ def get_results():
     return json.dumps(response)
 
 if __name__ == "__main__":
-    app.debug = False
+    app.debug = True
     port = int(os.environ.get("PORT", 33507))
     app.run(host='0.0.0.0', port=port)

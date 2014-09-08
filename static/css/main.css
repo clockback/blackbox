@@ -77,7 +77,11 @@ p#atom_coords, p#starting_score, p#debug {
     display: none;
 }
 
+#dialog {
+}
+
 /* jQuery UI **************************************************************** */
+
 .no-close .ui-dialog-titlebar-close {
     display: none;
 }

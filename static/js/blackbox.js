@@ -100,6 +100,7 @@ $( document ).ready(function() {
             title: "Score results",
             autoOpen: false,
             width: 400,
+            position: {my: "left bottom", at: "left+370 bottom", of: $("#reveal") },
             dialogClass: "no-close",
             buttons: [
 	            {
