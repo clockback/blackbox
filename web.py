@@ -19,9 +19,7 @@ def get_header(title):
           href='static/css/jquery-ui.min.css' />
     <link rel='stylesheet' type='text/css'
           href='static/css/main.css' />
-    <link rel='stylesheet' type='text/css'
-          href='static/css/print.css'
-          media='print' />
+    <script type="text/javascript" src="static/js/underscore-min.js"></script>
     <script type="text/javascript" src="static/js/jquery.min.js"></script>
     <script type="text/javascript" src="static/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="static/js/blackbox.js"></script>

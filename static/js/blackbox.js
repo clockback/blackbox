@@ -28,10 +28,36 @@ var flagged_class = "flagged";
 
 $( document ).ready(function() {
     
+    function add_simple_tooltip(cell, msg, x_offset, y_offset){
+        if(_.isUndefined(x_offset)){
+            x_offset = 10;
+        };
+        if(_.isUndefined(y_offset)){
+            y_offset = -30;
+        };
+        cell.hover(
+            function(event){
+                $('div#tooltip')
+                    .text(msg)
+                    .css('left', event.pageX + x_offset)
+                    .css('top', event.pageY + y_offset)
+                    .show();
+            },
+            function(){
+                $('div#tooltip')
+                    .hide();
+            }
+        );
+    };
     var score = Number($("p#starting_score").text());
     var atom_coords_str = $("p#atom_coords").text();
     $("td.numbered").click(function(){
         var cell = $(this);
+        if(cell.hasClass("already_clicked")){
+            return;
+        } else {
+            cell.addClass("already_clicked");
+        }
         var entry = cell.attr('id');        
         $.ajax({
             type: "POST",
@@ -58,10 +84,15 @@ $( document ).ready(function() {
                 score++;
             } else {
                 var feedback = entry + " emerged at " + response;
+                var recipient_feedback = response + " came from " + entry;
                 cell.css("background-color", web_colour);
+                var recipient_cell = $("td#" + response);
+                recipient_cell.addClass("already_clicked");
+                add_simple_tooltip(recipient_cell, recipient_feedback);
                 $("td#" + response).css("background-color", web_colour);
                 score = score + 2;
             }
+            add_simple_tooltip(cell, feedback);
             if(score == 1){
                 $("p#score").text("Score: " + score + " point");
             } else {

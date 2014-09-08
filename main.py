@@ -28,6 +28,7 @@ def get_game_init():
     <p id='score'>Score: 0 points</p>
     <button type="button" id='reveal'">Done</button>
     <div id="dialog" title="Feedback" style="display: none;"></div>
+    <div id="tooltip" style="display: none;"></div>
     </body>
     </html>
     """.format(header=header_html, atom_coords_str=atom_coords_str,
@@ -63,6 +64,6 @@ def get_results():
     return json.dumps(response)
 
 if __name__ == "__main__":
-    app.debug = True
+    app.debug = False
     port = int(os.environ.get("PORT", 33507))
     app.run(host='0.0.0.0', port=port)
